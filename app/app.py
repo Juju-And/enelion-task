@@ -76,7 +76,7 @@ def handle_record(record_id):
     elif request.method == 'DELETE':
         db.session.delete(record)
         db.session.commit()
-        return {"message": f"Car {record.name} successfully deleted."}
+        return {"message": f"Record with Latitude {record.lat} and Longitude {record.lng} successfully deleted."}
 
 
 app.config['DEBUG'] = True
