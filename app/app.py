@@ -29,7 +29,9 @@ def handle_records():
             new_record = ChargeNetwork(lat=data['lat'], lng=data['lng'], unit_value=data['unit_value'])
             db.session.add(new_record)
             db.session.commit()
-            return {"message": f"record for {new_record.lat} and {new_record.lng} has been created successfully."}
+            return {
+                "message": f"Record with Latitude {new_record.lat} and Longitude {new_record.lng} has been created "
+                           f"successfully."}
         else:
             return {"error": "The request payload is not in JSON format"}
 
@@ -37,6 +39,7 @@ def handle_records():
         records = ChargeNetwork.query.all()
         results = [
             {
+                "id": record.id,
                 "lat": record.lat,
                 "lng": record.lng,
                 "unit_value": record.unit_value,
@@ -47,14 +50,33 @@ def handle_records():
         return {"count": len(results), "records": results}
 
 
-@app.route('/records/<id>', methods=['DELETE'])
-def delete_record():
-    pass
+@app.route('/records/<record_id>', methods=['GET', 'PUT', 'DELETE'])
+def handle_record(record_id):
+    record = ChargeNetwork.query.get_or_404(record_id)
 
+    if request.method == 'GET':
+        response = {
+            "lat": record.lat,
+            "lng": record.lng,
+            "unit_value": record.unit_value,
+            "time_created": record.time_created,
+            "time_updated": record.time_updated
+        }
+        return {"message": "success", "car": response}
 
-@app.route('/records/<id>', methods=['PUT'])
-def update_record():
-    pass
+    elif request.method == 'PUT':
+        data = request.get_json()
+        record.lat = data['lat']
+        record.lng = data['lng']
+        record.unit_value = data['unit_value']
+        db.session.add(record)
+        db.session.commit()
+        return {"message": f"Record with Latitude {record.lat} and Longitude {record.lng} successfully updated"}
+
+    elif request.method == 'DELETE':
+        db.session.delete(record)
+        db.session.commit()
+        return {"message": f"Car {record.name} successfully deleted."}
 
 
 app.config['DEBUG'] = True
