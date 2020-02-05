@@ -1,8 +1,11 @@
+import flask
 from flask import Flask, request
+from flask_migrate import Migrate
+
 from models import db, ChargeNetwork
 
 app = Flask(__name__)
-
+migrate = Migrate(app, db)
 POSTGRES = {
     'user': 'postgres',
     'pw': 'coderslab',
@@ -16,11 +19,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 
-@app.route('/')
-def main():
-    return 'Hello World!'
-
-
 @app.route('/records', methods=['GET', 'POST'])
 def handle_records():
     if request.method == 'POST':
@@ -29,11 +27,9 @@ def handle_records():
             new_record = ChargeNetwork(lat=data['lat'], lng=data['lng'], unit_value=data['unit_value'])
             db.session.add(new_record)
             db.session.commit()
-            return {
-                "message": f"Record with Latitude {new_record.lat} and Longitude {new_record.lng} has been created "
-                           f"successfully."}
+            return flask.Response(status=201)
         else:
-            return {"error": "The request payload is not in JSON format"}
+            return flask.Response(status=400)
 
     elif request.method == 'GET':
         records = ChargeNetwork.query.all()
@@ -47,7 +43,7 @@ def handle_records():
                 "time_updated": record.time_updated
             } for record in records]
 
-        return {"count": len(results), "records": results}
+        return {"records": results}
 
 
 @app.route('/records/<record_id>', methods=['GET', 'PUT', 'DELETE'])
@@ -62,7 +58,7 @@ def handle_record(record_id):
             "time_created": record.time_created,
             "time_updated": record.time_updated
         }
-        return {"message": "success", "car": response}
+        return {"message": "success", "record": response}
 
     elif request.method == 'PUT':
         data = request.get_json()
@@ -71,12 +67,12 @@ def handle_record(record_id):
         record.unit_value = data['unit_value']
         db.session.add(record)
         db.session.commit()
-        return {"message": f"Record with Latitude {record.lat} and Longitude {record.lng} successfully updated"}
+        return flask.Response(status=204)
 
     elif request.method == 'DELETE':
         db.session.delete(record)
         db.session.commit()
-        return {"message": f"Record with Latitude {record.lat} and Longitude {record.lng} successfully deleted."}
+        return flask.Response(status=204)
 
 
 app.config['DEBUG'] = True
