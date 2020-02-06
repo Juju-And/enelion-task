@@ -1,7 +1,9 @@
 # enelion-task
 
-This is a back end code using Flask, which thanks to SQLAlchemy communicates with Postresql database in order to deal with 4 kinds of 
-HTTP methods.
+This is a back end code using Flask, which gives options to retrieve a list of 
+Charge Points with details as Latitude and Longitude, date-time of its creation/update, 
+and value per unit. Other options are to receive Charge Points by its id entered 
+to the URL address, possibility to edit it or delete from the database.
 
 ## Getting started
 
@@ -23,7 +25,7 @@ As a first step create you own database in PostgreSQL with command as follow:
 $ CREATE DATABASE enelion;
 ```
 
-In file app.py, change credentials POSTGRES credentials in order to match them with your system:
+In file app.py, change POSTGRES credentials in order to match them with your system:
 ```
 POSTGRES = {
     'user': '{{ user }}',
@@ -79,7 +81,7 @@ Here example of input json:
 
 `    { "lat": 54.352024, "lng": 18.646639, "unit_value": 0.55 } `
 
-### ULR passes id to methods
+### URL passes id to methods
 
 #### GET /records/<record_id>
 Returns data on particular object from database in json format.

@@ -6,12 +6,14 @@ from models import db, ChargeNetwork
 
 app = Flask(__name__)
 migrate = Migrate(app, db)
+
+# Please adjust accordingly
 POSTGRES = {
-    'user': 'postgres',
-    'pw': 'coderslab',
+    'user': 'YourUser',
+    'pw': 'YourPassword',
     'db': 'enelion',
     'host': 'localhost',
-    'port': '5432',
+    'port': 'YourPort',
 }
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s' % POSTGRES
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

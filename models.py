@@ -9,5 +9,5 @@ class ChargeNetwork(db.Model):
     lat = db.Column(db.Float)
     lng = db.Column(db.Float)
     unit_value = db.Column(db.Float)
-    time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    time_created = db.Column(TIMESTAMP, server_default=func.now())
     time_updated = db.Column(TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp())
