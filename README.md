@@ -1,9 +1,6 @@
 # enelion-task
 
-This is a back end code using Flask, which gives options to retrieve a list of 
-Charge Points with details as Latitude and Longitude, date-time of its creation/update, 
-and value per unit. Other options are to receive Charge Points by its id entered 
-to the URL address, possibility to edit it or delete from the database.
+This is a back end code using Flask, to endpoint management.
 
 ## Getting started
 
